@@ -27,5 +27,5 @@ def create_app(test_config=None):
     @app.route("/hello")
     def hello():
         a = app.instance_path
-        return "Hello World..!" + str(a)
+        return "Hello World..!" + str(a) 
     return app
