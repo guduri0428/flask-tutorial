@@ -1,31 +1,39 @@
 import os
+
 from flask import Flask
-
+from . import db
+from . import auth
+from . import blog
 def create_app(test_config=None):
-
-    app = Flask(__name__,instance_relative_config=True)
+    # create and configure the app
+    app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path,'flaskr.sqlite')
+        DATABASE=os.path.join(app.instance_path, 'flaskr_sqlite.db'),
     )
 
     if test_config is None:
-        # Load the instance config, if it exists when not testing
-        app.config.from_pyfile('config.py',silent=True)
+        # load the instance config, if it exists, when not testing
+        app.config.from_pyfile('config.py', silent=True)
     else:
-        # Load the test config if it passed in
+        # load the test config if passed in
         app.config.from_mapping(test_config)
-    
+
+    # ensure the instance folder exists
     try:
-        # ensure the instance folder exists
         os.makedirs(app.instance_path)
     except OSError:
         pass
-    
 
-    # a simple page that shows hello
-    @app.route("/hello")
+    # a simple page that says hello
+    @app.route('/hello')
     def hello():
         a = app.instance_path
-        return "Hello World..!" + str(a) 
+        return 'Hello, World!' + str(a)
+    
+    db.init_app(app)
+    app.register_blueprint(auth.auth_bp)
+    app.register_blueprint(blog.blog_bp)
+    app.add_url_rule('/', endpoint='index')
+
     return app
