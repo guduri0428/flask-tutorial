@@ -8,7 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.db import get_db
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
-
+#created auth_bp blueprint to register.
 @auth_bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
